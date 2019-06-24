@@ -1,5 +1,4 @@
-# CVC'19 Document Wallet
-
+# Applying Deep Reinforcement Learning Models on various 2D created environments
 ### Youtube demo for application functions and testing can be found [here](https://www.google.com.eg) 
 
 ## Intro
