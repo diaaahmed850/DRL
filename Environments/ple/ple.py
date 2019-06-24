@@ -420,3 +420,5 @@ class PLE(object):
         self.previous_score = self.game.getScore()
 
         return reward
+    def getStateSize(self):
+        return self.game.state_size

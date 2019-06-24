@@ -3,11 +3,13 @@ import tensorflow as tf
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Dropout
 from tensorflow.python.keras.optimizers import Adam
+#from tensorflow.python.keras.backend import manual_variable_initialization
+#manual_variable_initialization(True)
 from collections import deque
 import numpy as np
 import os,random
 class DQNAgent:
-    def __init__(self, state_size, action_size):
+    def __init__(self, state_size, action_size,train_flag=True):
         self.state_size = state_size
         self.action_size = action_size
         self.batch_size = 64
@@ -21,6 +23,7 @@ class DQNAgent:
         self.train_on_TPU = False #Won't work if True
         self.model = self._build_model()
         self.target_model = self._build_model()
+        self.train=train_flag
         if self.train_on_TPU:
             self.cpu_model = self.target_model.sync_to_cpu()
 
@@ -49,12 +52,17 @@ class DQNAgent:
         self.memory.append([state, action, reward, next_state, done])
 
     def act(self, state):
-        if np.random.rand() <= self.epsilon:
-            return np.random.choice([0, 1], p=[0.25, 0.75]) #random.randrange(self.action_size)
-#         if self.train_on_TPU: # Sorry for this hack, Google
-#             state = state.repeat(self.batch_size, axis=0)
-        act_values = self.model.predict(state) if not self.train_on_TPU else self.cpu_model.predict(state) 
-        return np.argmax(act_values[0])  # returns action
+        if(self.train):
+            if np.random.rand() <= self.epsilon:
+                return np.random.choice([0, 1], p=[0.25, 0.75]) #random.randrange(self.action_size)
+    #         if self.train_on_TPU: # Sorry for this hack, Google
+    #             state = state.repeat(self.batch_size, axis=0)
+            act_values = self.model.predict(state) if not self.train_on_TPU else self.cpu_model.predict(state) 
+            return np.argmax(act_values[0])  # returns action
+        else:
+            act_values = self.model.predict(state)
+            return np.argmax(act_values[0])  # returns action
+
 
     def replay(self):
         minibatch = random.sample(self.memory, self.batch_size)

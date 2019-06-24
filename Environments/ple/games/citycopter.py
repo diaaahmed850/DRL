@@ -22,7 +22,7 @@ class Block(pygame.sprite.Sprite):
         self.width = int(SCREEN_WIDTH * 0.05)
         self.height = int(SCREEN_HEIGHT * 0.2)
         self.speed = speed
-
+        
         self.SCREEN_WIDTH = SCREEN_WIDTH
         self.SCREEN_HEIGHT = SCREEN_HEIGHT
 
@@ -144,6 +144,7 @@ class citycopter(PyGameWrapper):
         PyGameWrapper.__init__(self, width, height, actions=actions)
 
         self.is_climbing = False
+        self.state_size=7
         self.speed = 0.0004 * width
 
     def _handle_player_events(self):
