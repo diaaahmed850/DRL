@@ -1,10 +1,10 @@
-# Applying Deep Reinforcement Learning Models on various 2D created environments
+# Applying Deep Reinforcement Learning Models on 2D environments
 ### Youtube demo for application functions and testing can be found [here](https://www.google.com.eg) 
 
 ## Intro
 **Document Wallet** (**Ma7fazti**) is a cross-platform application that allow the user to scan different types of documents/cards images, extract information from them, and keep such data on his personal account for later usage.
 
-This is our graduation project and it's totally developed by a 4th Year Computer and Systems department team, at Facuty of Engineering Ain Shams University Cairo.
+A Graduation project totally developed by a 4th Year Computer and Systems department team, at Facuty of Engineering Ain Shams University Cairo.
 
 The Team name is **X-Team** and his members are:
 - [Diaa Ahmed](https://github.com/diaaahmed850)
