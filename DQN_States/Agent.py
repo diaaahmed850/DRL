@@ -25,7 +25,10 @@ from tensorflow.python.keras import backend as K
 #from tensorflow.python.keras.layers import random_uniform_initializer
 
 
-
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib import style
+from shutil import copyfile
 
 
 def sigint_handler(signum, frame):
@@ -55,8 +58,11 @@ class DQN_States:
         self.today=str(datetime.date.today())
         self.path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_data/")
         filename =self.path+self.env_name+'/'+self.today+'/data_plots/data_plots.txt'
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        self.plotData_file=open(filename, 'w')
+        if train_flag == True:
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            self.plotData_file=open(filename, 'w')
+        else:
+            self.plotData_file=open(filename, 'r')
         self.env.init()
     def make_env(self,env_name):
         if(env_name=='citycopter'):
@@ -140,6 +146,74 @@ class DQN_States:
                 
             if stop_flow:
                 break
+    
+    def plot(self):
+        FILENAME = self.path+self.env_name+'/'+self.today+"/data_plots/data_plots.txt"
+        style.use('fivethirtyeight')
+
+        fig = plt.figure()
+        #ax1 = fig.add_subplot(1,1,1)
+        ax2 = fig.add_subplot(1,1,1)
+        graph_data = open(FILENAME,'r').read()
+        lines = graph_data.split('\n')
+        #print(lines)
+        xs = []
+        #ys = []
+        zs = []
+        for line in lines:
+            if len(line) > 1:
+                x, y, z = line.split(',')
+                xs.append(float(x))
+                #ys.append(float(y))
+                zs.append(float(z))
+        #ax1.clear()
+        ax2.clear()
+        #ax1.plot(xs, ys)
+        ax2.plot(xs, zs)
+        #ani = animation.FuncAnimation(fig, plot, interval=10000000)
+        plt.show()
+
+
+    def plotRewards(self):
+        FILENAME = self.path+self.env_name+'/'+self.today+"/data_plots/data_plots.txt"
+        style.use('fivethirtyeight')
+
+        fig = plt.figure()
+        #ax1 = fig.add_subplot(1,1,1)
+        ax1 = fig.add_subplot(1,1,1)
+        avg_over = 10
+        graph_data = open(FILENAME,'r').read()
+        lines = graph_data.split('\n')
+        #print(lines)
+        xs = []
+        ys = []
+        ys_sum = 0.0
+        #zs_sum = 0.0
+        #zs = []
+        j = 0
+        for line in lines:
+            if len(line) > 1:
+                try:
+                    x, y, z = line.split(',')
+                    ys_sum += float(y)
+                    #zs_sum += float(z)
+                    j += 1
+                    if j % avg_over == 0:
+                        xs.append(float(x))
+                        ys.append(ys_sum/float(avg_over))
+                        #zs.append(zs_sum/float(avg_over))
+                        ys_sum = 0.0
+                        #zs_sum = 0
+                except:
+                    continue
+        #ax1.clear()
+        ax1.clear()
+        #ax2.clear()
+        ax1.plot(xs, ys)
+        #ax2.plot(xs, zs)
+        #ani = animation.FuncAnimation(fig, plot, interval=10000000)
+        plt.show()
+
 
 
 

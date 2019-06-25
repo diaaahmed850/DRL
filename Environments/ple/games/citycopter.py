@@ -322,6 +322,7 @@ class citycopter(PyGameWrapper):
             self.score += self.rewards["loss"]
         sky_path = os.path.join(_asset_dir, "sky.png")
         background_image = pygame.image.load(sky_path).convert()
+        background_image = pygame.transform.scale(background_image,(480,480))
         self.screen.blit(background_image, [0, 0])
         self.player_group.draw(self.screen)
         self.block_group.draw(self.screen)
