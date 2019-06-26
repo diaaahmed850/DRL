@@ -13,9 +13,9 @@ sys.path.append('..')
 #sys.path.append(os.path.abspath(os.path.join('..', 'Environments')))
 
 import random, pygame, signal, time
-from Environments.ple import PLE
-from Environments.ple.games.citycopter import citycopter
-from Environments.ple.games.catcher import Catcher
+from Environments.ple_xteam import PLE
+from Environments.ple_xteam.games.citycopter import citycopter
+from Environments.ple_xteam.games.catcher import Catcher
 
 from pygame.constants import K_w, K_s
 from .model import DQNAgent
@@ -38,7 +38,7 @@ def sigint_handler(signum, frame):
     
 # To capture Ctrl-C events and stop gracefully
 # Source: https://pythonadventures.wordpress.com/2012/11/21/handle-ctrlc-in-your-script/
-signal.signal(signal.SIGINT, sigint_handler)
+
 
 # These dumps can be read by plot*.py and display the rewards/loss curve
 #f = open('saved/data_plots.txt', 'w')
@@ -58,6 +58,7 @@ class DQN_States:
         self.today=str(datetime.date.today())
         self.path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_data/")
         filename =self.path+self.env_name+'/'+self.today+'/data_plots/data_plots.txt'
+        signal.signal(signal.SIGINT, sigint_handler)
         if train_flag == True:
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             self.plotData_file=open(filename, 'w')
@@ -147,72 +148,57 @@ class DQN_States:
             if stop_flow:
                 break
     
-    def plot(self):
+    def plotLoss(self):
         FILENAME = self.path+self.env_name+'/'+self.today+"/data_plots/data_plots.txt"
+        fig_path = self.path+self.env_name+'/'+self.today+"/data_plots/"
         style.use('fivethirtyeight')
 
         fig = plt.figure()
-        #ax1 = fig.add_subplot(1,1,1)
         ax2 = fig.add_subplot(1,1,1)
         graph_data = open(FILENAME,'r').read()
         lines = graph_data.split('\n')
-        #print(lines)
         xs = []
-        #ys = []
         zs = []
         for line in lines:
             if len(line) > 1:
                 x, y, z = line.split(',')
                 xs.append(float(x))
-                #ys.append(float(y))
                 zs.append(float(z))
-        #ax1.clear()
         ax2.clear()
-        #ax1.plot(xs, ys)
         ax2.plot(xs, zs)
-        #ani = animation.FuncAnimation(fig, plot, interval=10000000)
-        plt.show()
+        plt.savefig(fig_path+'loss.png')
 
 
     def plotRewards(self):
         FILENAME = self.path+self.env_name+'/'+self.today+"/data_plots/data_plots.txt"
+        fig_path = self.path+self.env_name+'/'+self.today+"/data_plots/"
         style.use('fivethirtyeight')
 
         fig = plt.figure()
-        #ax1 = fig.add_subplot(1,1,1)
         ax1 = fig.add_subplot(1,1,1)
         avg_over = 10
         graph_data = open(FILENAME,'r').read()
         lines = graph_data.split('\n')
-        #print(lines)
         xs = []
         ys = []
         ys_sum = 0.0
-        #zs_sum = 0.0
-        #zs = []
         j = 0
         for line in lines:
             if len(line) > 1:
                 try:
                     x, y, z = line.split(',')
                     ys_sum += float(y)
-                    #zs_sum += float(z)
                     j += 1
                     if j % avg_over == 0:
                         xs.append(float(x))
                         ys.append(ys_sum/float(avg_over))
-                        #zs.append(zs_sum/float(avg_over))
                         ys_sum = 0.0
-                        #zs_sum = 0
+
                 except:
                     continue
-        #ax1.clear()
         ax1.clear()
-        #ax2.clear()
         ax1.plot(xs, ys)
-        #ax2.plot(xs, zs)
-        #ani = animation.FuncAnimation(fig, plot, interval=10000000)
-        plt.show()
+        plt.savefig(fig_path+'rewards.png')
 
 
 
