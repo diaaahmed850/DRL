@@ -136,7 +136,7 @@ class citycopter(PyGameWrapper):
         Screen height, recommended to be same dimension as width.
     """
 
-    def __init__(self, width=48, height=48):
+    def __init__(self, width=480, height=480):
         actions = {
             "up": K_w
         }
