@@ -9,36 +9,29 @@ with contextlib.redirect_stdout(None):
     import pygame
     import pygame.gfxdraw
     from pygame.constants import K_a, K_SPACE
-    from .base.pygamewrapper import PyGameWrapper
+    from base.pygamewrapper import PyGameWrapper
 
-PURPLE = (140, 5, 255)   #GREYSCALE 	(73, 73, 73)
-RED    = (255, 5, 145)    #GREYSCALE 	(95, 95, 95)
-TEAL   = (50, 218, 242)   #GREYSCALE    (168, 168, 168)
-YELLOW = (246, 223, 14)   #GREYSCALE 	(207, 207, 207)
+PURPLE = (140, 0, 255)    #GREYSCALE 	(70, 70, 70)
+RED    = (255, 12, 150)    #GREYSCALE 	(100, 100, 100)
+TEAL   = (45, 220, 240)   #GREYSCALE    (170, 170, 170)
+YELLOW = (250, 225, 20)   #GREYSCALE 	(210, 210, 210)
 BLACK  = (0, 0, 0)
 WHITE  = (255, 255, 255)
-colors = [PURPLE,RED,TEAL,YELLOW]
-"""
-Global Variables
-"""
-pygame.init()
-pygame.font.init()
-SCREEN_WIDTH, SCREEN_HEIGHT = 500,700
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Color Switch")
-clock = pygame.time.Clock()
-obstacles = []#list()
-stars     = []    #list()
-pies      = []     #list()
-score = 0
-font = pygame.font.Font(pygame.font.get_default_font(), 24)
-menu_font = pygame.font.Font(pygame.font.get_default_font(), 60)
+#colors = [PURPLE,RED,TEAL,YELLOW]
+colors = [TEAL,YELLOW,PURPLE,RED]
+angles = "0-90 TEAL , 90-180 YELLOW, 180-270 PURBLE , 270-360 RED"
 
-"""
-"""
+def get_colorIndex(angle):
+    if angle <= 90:
+        return 0
+    if 180 > angle > 90:
+        return 1
+    if 270 > angle >= 180:
+        return 2
+    if 360 > angle >= 270:
+        return 3
 
 def random_color():
-    
     rand = random.randint(0,3)
     return colors[rand]
 
@@ -295,7 +288,7 @@ class colorswitch(PyGameWrapper):
 
         PyGameWrapper.__init__(self, width, height, actions=actions)
 
-        self.state_size=4
+        self.state_size = 2
         self.init_lives = init_lives
 
         self.surface = screen
@@ -309,10 +302,14 @@ class colorswitch(PyGameWrapper):
     def _handle_player_events(self):
         for e in pygame.event.get():
             if(e.type == pygame.QUIT):
-                return False
+                pygame.quit()
+                sys.exit()
+                #return False
             if(e.type == pygame.KEYDOWN):
                 if(e.key == pygame.K_ESCAPE):
-                    return False
+                    pygame.quit()
+                    sys.exit()
+                    #return False
                 elif(e.key == pygame.K_SPACE):
                     ball.vel = 8
 
@@ -347,12 +344,8 @@ class colorswitch(PyGameWrapper):
 
         """
         state = {
-            "player_ypos": ball.y_pos,
             "player_color":colors.index(ball.color),
-            #"player_vel": 1,
-            "obstacle_ypos": obstacles[0].y_pos,
-            #"obstacle_vel": 1,
-            "obstacle_ang": obstacles[0].angle
+            "obstacle_color":get_colorIndex(obstacles[0].angle)
         }
 
         return state
@@ -399,6 +392,19 @@ class colorswitch(PyGameWrapper):
 if __name__ == "__main__":
     import numpy as np
 
+
+    pygame.init()
+    pygame.font.init()
+    SCREEN_WIDTH, SCREEN_HEIGHT = 500,700
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Color Switch")
+    clock = pygame.time.Clock()
+    obstacles = []#list()
+    stars     = []    #list()
+    pies      = []     #list()
+    score = 0 
+    font = pygame.font.Font(pygame.font.get_default_font(), 24)
+    menu_font = pygame.font.Font(pygame.font.get_default_font(), 60)
     restart()
     SCREEN_WIDTH = 500  
     SCREEN_HEIGHT = 700
@@ -407,9 +413,10 @@ if __name__ == "__main__":
     #game.rng = np.random.RandomState(24)
     #game.screen = pygame.display.set_mode(game.getScreenDims(), 0, 32)
     #logo_path = os.path.join(_asset_dir, "catcher.png")
-    #catcherImage = pygame.image.load(logo_path).convert_alpha()
-    #pygame.display.set_icon(catcherImage)
-    #pygame.display.set_caption("FruitCatcher")  
+    logo_path = "color.jpg"
+    colorImage = pygame.image.load(logo_path).convert_alpha()
+    pygame.display.set_icon(colorImage)
+    pygame.display.set_caption("colorswitch")  
     game.clock = pygame.time.Clock()
     game.init()
 
@@ -418,5 +425,6 @@ if __name__ == "__main__":
             game.reset()
 
         game.step(SCREEN_WIDTH, SCREEN_HEIGHT)
+        print(game.getGameState())
         pygame.display.flip()
         pygame.display.update()
