@@ -3,7 +3,7 @@ from wrappers.wrapper_states.xteam_wrapper_states import PLEEnv
 
 # Pygame
 # ----------------------------------------
-for game in ['Catcher','citycopter']:
+for game in ['Catcher','citycopter','colorswitch']:
     nondeterministic = False
     register(
         id='{}-v0'.format(game),

@@ -106,6 +106,7 @@ class DQN_States:
                 action = self.agent.act(state)
                 next_state, reward, done, _ = self.actInEnv(action)
                 reward = reward if not done else -10
+
                 total_reward += reward
                 self.agent.remember(state, action, reward, next_state, done)
                 state = next_state
@@ -132,7 +133,7 @@ class DQN_States:
     
     def test(self):
         #self.agent.load('saved_data/'+self.env_name+'/'+self.today+"/heli-dqn-9000.h5")
-        self.agent.load(self.path+self.env_name+'/'+self.today+"/heli-dqn-final.h5")
+        self.agent.load(self.path+self.env_name+'/'+self.today+"/dqn-states-final.h5")
         done = False
 
         for e in range(starting_episode, EPISODES):

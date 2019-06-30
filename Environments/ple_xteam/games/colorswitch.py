@@ -9,7 +9,20 @@ with contextlib.redirect_stdout(None):
     import pygame
     import pygame.gfxdraw
     from pygame.constants import K_a, K_SPACE
-    from base.pygamewrapper import PyGameWrapper
+    from .base.pygamewrapper import PyGameWrapper
+
+pygame.init()
+pygame.font.init()
+SCREEN_WIDTH, SCREEN_HEIGHT = 500,700
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Color Switch")
+clock = pygame.time.Clock()
+obstacles = []#list()
+stars     = []    #list()
+pies      = []     #list()
+score = 0 
+font = pygame.font.Font(pygame.font.get_default_font(), 24)
+menu_font = pygame.font.Font(pygame.font.get_default_font(), 60)
 
 PURPLE = (140, 0, 255)    #GREYSCALE 	(70, 70, 70)
 RED    = (255, 12, 150)    #GREYSCALE 	(100, 100, 100)
@@ -393,18 +406,7 @@ if __name__ == "__main__":
     import numpy as np
 
 
-    pygame.init()
-    pygame.font.init()
-    SCREEN_WIDTH, SCREEN_HEIGHT = 500,700
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Color Switch")
-    clock = pygame.time.Clock()
-    obstacles = []#list()
-    stars     = []    #list()
-    pies      = []     #list()
-    score = 0 
-    font = pygame.font.Font(pygame.font.get_default_font(), 24)
-    menu_font = pygame.font.Font(pygame.font.get_default_font(), 60)
+    
     restart()
     SCREEN_WIDTH = 500  
     SCREEN_HEIGHT = 700
