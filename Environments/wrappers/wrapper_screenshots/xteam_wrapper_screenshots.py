@@ -76,3 +76,6 @@ class PLEEnv(gym.Env):
         self.game_state.game.rng = self.game_state.rng
 
         self.game_state.init()
+    
+    def lives(self):
+        return self.game_state.lives()

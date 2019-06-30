@@ -16,6 +16,7 @@ import random, pygame, signal, time
 from Environments.ple_xteam import PLE
 from Environments.ple_xteam.games.citycopter import citycopter
 from Environments.ple_xteam.games.catcher import Catcher
+from Environments.ple_xteam.games.colorswitch import colorswitch
 
 from pygame.constants import K_w, K_s
 from .model import DQNAgent
@@ -48,6 +49,7 @@ def sigint_handler(signum, frame):
 class DQN_States:
     def __init__(self, env_name,train_flag=True,fps=20, force_fps=True, display_screen=True):
         #tf.keras.backend.clear_session()
+        print(env_name)
         self.env_name=env_name
         self.game =self.make_env(env_name)
         self.env= PLE(self.game, fps=fps, force_fps=force_fps, display_screen=display_screen)
@@ -70,6 +72,9 @@ class DQN_States:
             return citycopter(512, 512)
         if(env_name=='catcher'):
             return Catcher(480,480)
+        if(env_name=='colorswitch'):
+            return colorswitch(500,700)
+
 
 
     def resetEnv(self):

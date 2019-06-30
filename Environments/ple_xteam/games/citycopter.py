@@ -25,7 +25,6 @@ class Block(pygame.sprite.Sprite):
         
         self.SCREEN_WIDTH = SCREEN_WIDTH
         self.SCREEN_HEIGHT = SCREEN_HEIGHT
-
         num = random.randrange(1,4,1)
         rock_path = os.path.join(_asset_dir, "rock"+str(num)+".png")
         image = pygame.image.load(rock_path).convert_alpha()

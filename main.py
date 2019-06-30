@@ -9,13 +9,13 @@ x.train()
 if args.algo =='dqn':
 
     if args.action=='train':
-        model=DQN_States('citycopter',train_flag =True)
+        model=DQN_States(args.env_name,train_flag =True)
         model.train()
     elif args.action=='test':
-        model=DQN_States('citycopter',train_flag =False)
+        model=DQN_States(args.env_name,train_flag =False)
         model.test()
     elif args.action=='plot':
-        model=DQN_States('citycopter',train_flag =False)
+        model=DQN_States(args.env_name,train_flag =False)
         model.plotLoss()
         model.plotRewards()
     else:
