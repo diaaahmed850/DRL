@@ -299,12 +299,9 @@ class colorswitch(PyGameWrapper):
     def __init__(self, width=500, height=700, init_lives=1):
 
         actions = {
-<<<<<<< HEAD
-            "UP": K_SPACE
-=======
+ 
             "UP": K_SPACE,
             #"None": K_a
->>>>>>> d778cef2210363fd6ef04cd97aff727c66f1dbe0
         }
 
         PyGameWrapper.__init__(self, width, height, actions=actions)
