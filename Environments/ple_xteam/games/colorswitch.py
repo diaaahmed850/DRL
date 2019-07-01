@@ -21,6 +21,7 @@ obstacles = []#list()
 stars     = []    #list()
 pies      = []     #list()
 score = 0 
+temp_score = 0
 font = pygame.font.Font(pygame.font.get_default_font(), 24)
 menu_font = pygame.font.Font(pygame.font.get_default_font(), 60)
 
@@ -176,6 +177,9 @@ class Ball(PyGameWrapper):
         self.x_pos = 0
         self.y_pos = 0
 
+    def cam_score(self):
+        return int(abs(cam.y)/50)
+
 
     def collision_detection(self):
         global score
@@ -184,7 +188,7 @@ class Ball(PyGameWrapper):
             if(star.y+16 >= self.y):
                 star.color = BLACK
                 if(not star.dead):
-                    score+=1
+                    score+=10
                 star.dead = True
             
         #print(y)
@@ -284,7 +288,7 @@ def restart():
         stars.append(temp_star)
         pies.append(temp_pie)
 
-    score = 0
+    score = -10
 
 
 
@@ -295,7 +299,12 @@ class colorswitch(PyGameWrapper):
     def __init__(self, width=500, height=700, init_lives=1):
 
         actions = {
+<<<<<<< HEAD
             "UP": K_SPACE
+=======
+            "UP": K_SPACE,
+            #"None": K_a
+>>>>>>> d778cef2210363fd6ef04cd97aff727c66f1dbe0
         }
 
         PyGameWrapper.__init__(self, width, height, actions=actions)
@@ -326,7 +335,8 @@ class colorswitch(PyGameWrapper):
                     ball.vel = 8
 
     def init(self):
-        self.score = 0
+        global score
+        score = 0
         self.lives = self.init_lives
 
         self.Ball = Ball(self.surface,self.x,self.y)
@@ -369,17 +379,24 @@ class colorswitch(PyGameWrapper):
         
     def game_over(self):
         return ball.dead
-
+    
+    #temp_score = 0
     def getScore(self):
-        return score
+        global score,temp_score
+        if ((ball.cam_score() - temp_score) != 0):
+            score += 1
+            temp_score = ball.cam_score()
+        #print(ball.cam_score())
+        return score 
 
 
     def step(self,width=500,height=700):
+        global score
         
         #self.screen.fill((0, 0, 0))
         self._handle_player_events()
 
-        #self.score += self.rewards["tick"]
+        score += self.rewards["tick"]
         clock.tick(80)
         screen.fill((20,20,20))
         #print(len(obstacles))
@@ -416,8 +433,8 @@ if __name__ == "__main__":
     #game.screen = pygame.display.set_mode(game.getScreenDims(), 0, 32)
     #logo_path = os.path.join(_asset_dir, "catcher.png")
     logo_path = "color.jpg"
-    colorImage = pygame.image.load(logo_path).convert_alpha()
-    pygame.display.set_icon(colorImage)
+    #colorImage = pygame.image.load(logo_path).convert_alpha()
+    #pygame.display.set_icon(colorImage)
     pygame.display.set_caption("colorswitch")  
     game.clock = pygame.time.Clock()
     game.init()
@@ -425,8 +442,9 @@ if __name__ == "__main__":
     while True:
         if game.game_over():
             game.reset()
+            #score += -5
 
         game.step(SCREEN_WIDTH, SCREEN_HEIGHT)
-        print(game.getGameState())
-        pygame.display.flip()
+        print(game.getScore())
+        #pygame.display.flip()
         pygame.display.update()
