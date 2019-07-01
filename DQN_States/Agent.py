@@ -16,7 +16,7 @@ import random, pygame, signal, time
 from Environments.ple_xteam import PLE
 from Environments.ple_xteam.games.citycopter import citycopter
 from Environments.ple_xteam.games.catcher import Catcher
-from Environments.ple_xteam.games.colorswitch import colorswitch
+#from Environments.ple_xteam.games.colorswitch import colorswitch
 
 from pygame.constants import K_w, K_s
 from .model import DQNAgent
@@ -105,7 +105,7 @@ class DQN_States:
                 currentIteration += 1
                 action = self.agent.act(state)
                 next_state, reward, done, _ = self.actInEnv(action)
-                reward = reward if not done else -10
+                #reward = reward if not done else -10
 
                 total_reward += reward
                 self.agent.remember(state, action, reward, next_state, done)

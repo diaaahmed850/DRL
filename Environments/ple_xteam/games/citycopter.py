@@ -143,7 +143,7 @@ class citycopter(PyGameWrapper):
         PyGameWrapper.__init__(self, width, height, actions=actions)
 
         self.is_climbing = False
-        self.state_size=7
+        self.state_size = 7
         self.speed = 0.0004 * width
 
     def _handle_player_events(self):
@@ -172,6 +172,7 @@ class citycopter(PyGameWrapper):
             * next block x distance to player.
             * next blocks top y location,
             * next blocks bottom y location.
+            * distance between next block bottom floor
             See code for structure.
         """
 
@@ -193,6 +194,7 @@ class citycopter(PyGameWrapper):
             "next_gate_dist_to_player": min_dist,
             "next_gate_block_top": min_block.pos.y,
             "next_gate_block_bottom": min_block.pos.y + min_block.height
+            #"distance_block_floor" : (current_terrain.pos.y + self.height * 0.25) - min_block.pos.y
         }
 
         return state
@@ -254,8 +256,8 @@ class citycopter(PyGameWrapper):
     def _add_blocks(self):
         x_pos = self.rng.randint(self.width, int(self.width * 1.05))
         y_pos = self.rng.randint(
-            int(self.height * 0.3),
-            int(self.height * 0.6)
+            int(self.height * 0.45),
+            int(self.height * 0.55)
         )
         self.block_group.add(
             Block(
@@ -319,13 +321,20 @@ class citycopter(PyGameWrapper):
 
         if self.lives <= 0.0:
             self.score += self.rewards["loss"]
-        sky_path = os.path.join(_asset_dir, "sky.png")
-        background_image = pygame.image.load(sky_path).convert()
-        background_image = pygame.transform.scale(background_image,(480,480))
-        self.screen.blit(background_image, [0, 0])
+        #sky_path = os.path.join(_asset_dir, "sky.png")
+        #background_image = pygame.image.load(sky_path).convert()
+        #background_image = pygame.transform.scale(background_image,(480,480))
+        #self.screen.blit(background_image, [0, 0])
         self.player_group.draw(self.screen)
         self.block_group.draw(self.screen)
         self.terrain_group.draw(self.screen)
+
+        score = int(self.getScore())
+        if(score<0):
+            score =0
+        font = pygame.font.SysFont("Arial",int(self.width/15),True)
+        font_surface = font.render(str(score),True,[0,0,0]) #"Score:"+
+        self.screen.blit(font_surface , [int(self.width/2),int(self.height/12)])
         
 
 
@@ -347,7 +356,7 @@ if __name__ == "__main__":
         
         if game.game_over():   
             game.reset()
-        
+            #game.rng = np.random.RandomState(24)
         dt = game.clock.tick_busy_loop(30) 
         game.step(dt) 
         pygame.display.update()

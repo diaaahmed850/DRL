@@ -295,8 +295,7 @@ class colorswitch(PyGameWrapper):
     def __init__(self, width=500, height=700, init_lives=1):
 
         actions = {
-            "UP": K_SPACE,
-            "None": K_a
+            "UP": K_SPACE
         }
 
         PyGameWrapper.__init__(self, width, height, actions=actions)
@@ -366,6 +365,7 @@ class colorswitch(PyGameWrapper):
 
     def reset(self):
         restart()
+        #self.init()
         
     def game_over(self):
         return ball.dead
@@ -399,7 +399,7 @@ class colorswitch(PyGameWrapper):
             if(cs.y+cs.rad-cam.y >= 0 and cs.y-cs.rad-cam.y <= SCREEN_HEIGHT):
                 cs.draw()
         ball.draw()
-        screen.blit(font.render(str(score), True, WHITE), (10, 10))
+        #screen.blit(font.render(str(score), True, WHITE), (10, 10))
 
 
 if __name__ == "__main__":
