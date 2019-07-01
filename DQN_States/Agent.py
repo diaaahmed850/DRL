@@ -16,7 +16,7 @@ import random, pygame, signal, time
 from Environments.ple_xteam import PLE
 from Environments.ple_xteam.games.citycopter import citycopter
 from Environments.ple_xteam.games.catcher import Catcher
-from Environments.ple_xteam.games.colorswitch import colorswitch
+#from Environments.ple_xteam.games.colorswitch import colorswitch
 
 from pygame.constants import K_w, K_s
 from .model import DQNAgent
