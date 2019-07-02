@@ -10,6 +10,12 @@ from .dqn.agent import Agent
 from .dqn.environment import GymEnvironment, SimpleGymEnvironment
 from .config import get_config
 import argparse
+
+
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib import style
+from shutil import copyfile
 #flags = tf.app.flags
 """
 parser = argparse.ArgumentParser()
@@ -110,6 +116,39 @@ def test_DQN_Screenshots():
 
     agent = Agent(config, env, sess)
     agent.play()
+
+def plot_DQN_Screenshots():
+      path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_models/")
+      FILENAME =path+FLAGS.env_name+'/'+FLAGS.folder+'/data_plots/data_plots.txt'
+      fig_path=path+FLAGS.env_name+'/'+FLAGS.folder+'/data_plots/'
+      style.use('fivethirtyeight')
+
+      fig = plt.figure()
+      ax1 = fig.add_subplot(1,1,1)
+      avg_over = 10
+      graph_data = open(FILENAME,'r').read()
+      lines = graph_data.split('\n')
+      xs = []
+      ys = []
+      ys_sum = 0.0
+      j = 0
+      for line in lines:
+          if len(line) > 1:
+              try:
+                  x, y, z = line.split(',')
+                  ys_sum += float(y)
+                  j += 1
+                  if j % avg_over == 0:
+                      xs.append(float(x))
+                      ys.append(ys_sum/float(avg_over))
+                      ys_sum = 0.0
+
+              except:
+                  continue
+      ax1.clear()
+      ax1.plot(xs, ys)
+      plt.savefig(fig_path+'rewards.png')
+
       
       
 """
@@ -145,4 +184,3 @@ if __name__ == '__main__':
   print("aloooooooooooo")
   tf.app.run()
 """
-train_DQN_Screenshots()

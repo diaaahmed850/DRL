@@ -1,5 +1,5 @@
 from DQN_States.Agent import DQN_States
-from DQN_Screenshots.Agent_DQN_ScreenShots import train_DQN_Screenshots,test_DQN_Screenshots
+from DQN_Screenshots.Agent_DQN_ScreenShots import train_DQN_Screenshots,test_DQN_Screenshots,plot_DQN_Screenshots
 from Advantage_Actor_Critic.Agent import trainAdvantageActorCritic,testAdvantageActorCritic,plotAdvantageActorCritic
 from arguments import get_args
 args = get_args()
@@ -28,7 +28,7 @@ if args.algo =='dqn':
         elif args.action=='test':
             test_DQN_Screenshots()
         elif args.action=='plot':
-            pass
+            plot_DQN_Screenshots()
         else:
             raise Exception('please provide suitable action')
 

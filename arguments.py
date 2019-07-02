@@ -1,6 +1,6 @@
 import argparse
 
-import torch
+#import torch
 
 import datetime
 def get_args():
@@ -76,14 +76,13 @@ def get_args():
                         help='use a linear schedule on the ppo clipping parameter')
     parser.add_argument('--non-det', action='store_true', default=False,
                     help='whether to use a non-deterministic policy')
-    args = parser.parse_args()
 
-    args.cuda = not args.no_cuda and torch.cuda.is_available()
+    #args.cuda = not args.no_cuda and torch.cuda.is_available()
 
     """ args of DQN_ScreenShots """
     parser.add_argument('--model',type=str,default='m1',help='Type of model')
-    parser.add_argument('--dueling',type=bool,default=False,help='Whether to use dueling deep q-network')
-    parser.add_argument('--double-q',type=bool,default=False,help='Whether to use double q-learning')
+    parser.add_argument('--dueling',type=bool,default=True,help='Whether to use dueling deep q-network')
+    parser.add_argument('--double-q',type=bool,default=True,help='Whether to use double q-learning')
 
     #parser.add_argument('--env_name',type=str,default='Breakout-v0',help='The name of gym environment to use')
     parser.add_argument('--action-repeat',type=int,default=4,help='The number of action to be repeated')

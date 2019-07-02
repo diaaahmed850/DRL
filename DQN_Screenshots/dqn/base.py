@@ -1,14 +1,16 @@
-import os
 import pprint
 import inspect
-
+import os,sys
+from os.path import dirname, abspath
+sys.path.insert(0,dirname(dirname(dirname(abspath(__file__)))))
+from arguments import get_args
 import tensorflow as tf
 import os,sys
 from os.path import dirname, abspath
 import datetime
 pp = pprint.PrettyPrinter().pprint
 
-
+args=get_args()
 
 def class_vars(obj):
   return {k:v for k, v in inspect.getmembers(obj)
@@ -60,7 +62,8 @@ class BaseModel(object):
 
   @property
   def model_dir(self):
-    model_dir = dirname(dirname(abspath(__file__)))+'/trained_models/'+self.config.env_name+'/'+str(datetime.date.today())+'/'
+    #model_dir = dirname(dirname(abspath(__file__)))+'/trained_models/'+self.config.env_name+'/'+str(datetime.date.today())+'/'
+    model_dir = dirname(dirname(abspath(__file__)))+'/trained_models/'+self.config.env_name+'/'+args.folder+'/'
     print(model_dir)
     return model_dir
     """

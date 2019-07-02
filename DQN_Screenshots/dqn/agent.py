@@ -37,6 +37,9 @@ class Agent(BaseModel):
     self.build_dqn()
 
   def train(self):
+        
+    print(self.double_q)
+    print("gdgdgffdfdhhfdhdfhdfhdfhfdhdfdhfhfd")
     os.makedirs(os.path.dirname(self.fileName), exist_ok=True)
     self.plotData_file=open(self.fileName, 'w')
     start_step = self.step_op.eval()
