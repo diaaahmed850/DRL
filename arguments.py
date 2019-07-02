@@ -1,6 +1,6 @@
 import argparse
 
-#import torch
+import torch
 
 import datetime
 def get_args():
@@ -94,5 +94,7 @@ def get_args():
     parser.add_argument('--random-seed',type=int,default=123,help='Value of random seed')
 
     args = parser.parse_args()
+    args.cuda = not args.no_cuda and torch.cuda.is_available()
+	
 
     return args
