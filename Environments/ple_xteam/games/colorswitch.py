@@ -9,7 +9,7 @@ with contextlib.redirect_stdout(None):
     import pygame
     import pygame.gfxdraw
     from pygame.constants import K_a, K_SPACE
-    from .base.pygamewrapper import PyGameWrapper
+    from base.pygamewrapper import PyGameWrapper
 
 pygame.init()
 pygame.font.init()
@@ -102,7 +102,7 @@ class Obstacle(pygame.sprite.Sprite):
         pygame.gfxdraw.aacircle(self.surface, int(self.x-cam.x), int(self.y-cam.y), int(self.rad/2), (20,20,20))
         pygame.gfxdraw.aacircle(self.surface, int(self.x-cam.x), int(self.y-cam.y), int(self.rad/2)-thick-1, (20,20,20))
         pygame.gfxdraw.aacircle(self.surface, int(self.x-cam.x), int(self.y-cam.y), int(self.rad/2)-thick, (20,20,20))
-
+        #print((x, self.y_pos, self.rad, self.rad))
 
 class Star(pygame.sprite.Sprite):
     def __init__(self, surface, x, y):
@@ -414,6 +414,7 @@ class colorswitch(PyGameWrapper):
                 cs.draw()
         ball.draw()
         #screen.blit(font.render(str(score), True, WHITE), (10, 10))
+        print(self.getGameState())
 
 
 if __name__ == "__main__":

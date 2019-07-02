@@ -1,8 +1,8 @@
 import argparse
 
-import torch
+#import torch
 
-
+import datetime
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
     parser.add_argument('--action', default='train',
@@ -13,6 +13,9 @@ def get_args():
                         help='type of training: states | screenshots')
 
     parser.add_argument('--view', default='try',
+                        help='type of view: try | present')
+    
+    parser.add_argument('--folder', default=str(datetime.date.today()),
                         help='type of view: try | present')
 
     parser.add_argument('--lr', type=float, default=7e-4,
@@ -75,6 +78,22 @@ def get_args():
                     help='whether to use a non-deterministic policy')
     args = parser.parse_args()
 
-    args.cuda = not args.no_cuda and torch.cuda.is_available()
+    #args.cuda = not args.no_cuda and torch.cuda.is_available()
+
+    """ args of DQN_ScreenShots """
+    parser.add_argument('--model',type=str,default='m1',help='Type of model')
+    parser.add_argument('--dueling',type=bool,default=False,help='Whether to use dueling deep q-network')
+    parser.add_argument('--double-q',type=bool,default=False,help='Whether to use double q-learning')
+
+    #parser.add_argument('--env_name',type=str,default='Breakout-v0',help='The name of gym environment to use')
+    parser.add_argument('--action-repeat',type=int,default=4,help='The number of action to be repeated')
+
+    parser.add_argument('--use-gpu',type=bool,default=True,help='Whether to use gpu or not')
+    parser.add_argument('--gpu-fraction',type=str,default='7/10',help='idx / # of gpu fraction e.g. 1/3, 2/3, 3/3')
+    #parser.add_argument('--is_train',type=bool,default=True,help='Whether to do training or testing')
+    parser.add_argument('--display',type=bool,default=True,help='Whether to do display the game screen or not')
+    parser.add_argument('--random-seed',type=int,default=123,help='Value of random seed')
+
+    args = parser.parse_args()
 
     return args

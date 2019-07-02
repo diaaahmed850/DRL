@@ -60,8 +60,15 @@ class Environment(object):
 
   @property
   def lives(self):
-    return self.env.ale.lives()
-    #return self.env.lives()
+    is_atari = hasattr(gym.envs, 'atari') and isinstance(
+          self.env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
+    if is_atari:
+        return self.env.ale.lives()
+    else:
+        return self.env.lives()
+          
+          
+    
 
 
   @property

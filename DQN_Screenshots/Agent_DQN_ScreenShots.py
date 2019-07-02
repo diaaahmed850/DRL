@@ -1,12 +1,17 @@
 from __future__ import print_function
 import random
 import tensorflow as tf
+import os,sys
+from os.path import dirname, abspath
+sys.path.insert(0,(dirname(dirname(abspath(__file__)))))
 
-from dqn.agent import Agent
-from dqn.environment import GymEnvironment, SimpleGymEnvironment
-from config import get_config
+from arguments import get_args
+from .dqn.agent import Agent
+from .dqn.environment import GymEnvironment, SimpleGymEnvironment
+from .config import get_config
 import argparse
-flags = tf.app.flags
+#flags = tf.app.flags
+"""
 parser = argparse.ArgumentParser()
 parser.add_argument('--model',type=str,default='m1',help='Type of model')
 parser.add_argument('--dueling',type=bool,default=False,help='Whether to use dueling deep q-network')
@@ -21,7 +26,7 @@ parser.add_argument('--is_train',type=bool,default=True,help='Whether to do trai
 parser.add_argument('--display',type=bool,default=True,help='Whether to do display the game screen or not')
 parser.add_argument('--random_seed',type=int,default=123,help='Value of random seed')
 
-
+"""
 
 """
 # Model
@@ -42,8 +47,9 @@ flags.DEFINE_integer('random_seed', 123, 'Value of random seed')
 
 FLAGS = flags.FLAGS
 """
-FLAGS = parser.parse_args()
-print(FLAGS.is_train)
+FLAGS = get_args()
+print(FLAGS.gpu_fraction)
+#print(FLAGS.is_train)
 # Set random seed
 tf.set_random_seed(FLAGS.random_seed)
 random.seed(FLAGS.random_seed)
@@ -59,6 +65,54 @@ def calc_gpu_fraction(fraction_string):
   print(" [*] GPU : %.4f" % fraction)
   return fraction
 
+
+def train_DQN_Screenshots():
+  #tf.app.run()
+  gpu_options = tf.GPUOptions(
+      per_process_gpu_memory_fraction=calc_gpu_fraction(FLAGS.gpu_fraction))
+
+  with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
+    config = get_config(FLAGS) or FLAGS
+
+    if config.env_type == 'simple':
+      env = SimpleGymEnvironment(config)
+    else:
+      env = GymEnvironment(config)
+
+    if not tf.test.is_gpu_available() and True:
+      raise Exception("use_gpu flag is true when no GPUs are available")
+
+    if not True:
+      config.cnn_format = 'NHWC'
+
+    agent = Agent(config, env, sess)
+    agent.train()
+
+
+def test_DQN_Screenshots():
+  #tf.app.run()
+  gpu_options = tf.GPUOptions(
+      per_process_gpu_memory_fraction=calc_gpu_fraction(FLAGS.gpu_fraction))
+
+  with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
+    config = get_config(FLAGS) or FLAGS
+
+    if config.env_type == 'simple':
+      env = SimpleGymEnvironment(config)
+    else:
+      env = GymEnvironment(config)
+
+    if not tf.test.is_gpu_available() and True:
+      raise Exception("use_gpu flag is true when no GPUs are available")
+
+    if not True:
+      config.cnn_format = 'NHWC'
+
+    agent = Agent(config, env, sess)
+    agent.play()
+      
+      
+"""
 def main(_):
   gpu_options = tf.GPUOptions(
       per_process_gpu_memory_fraction=calc_gpu_fraction(FLAGS.gpu_fraction))
@@ -80,6 +134,7 @@ def main(_):
     agent = Agent(config, env, sess)
 
     if FLAGS.is_train:
+      print("kkkkkkkkkkkkkkkkkkk")
       agent.train()
        
     else:
@@ -87,4 +142,7 @@ def main(_):
        
 
 if __name__ == '__main__':
+  print("aloooooooooooo")
   tf.app.run()
+"""
+train_DQN_Screenshots()

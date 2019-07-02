@@ -47,7 +47,7 @@ def sigint_handler(signum, frame):
 
 
 class DQN_States:
-    def __init__(self, env_name,train_flag=True,fps=20, force_fps=True, display_screen=True):
+    def __init__(self, env_name,train_flag=True,fps=20, force_fps=True, display_screen=True,folder=str(datetime.date.today())):
         #tf.keras.backend.clear_session()
         print(env_name)
         self.env_name=env_name
@@ -57,7 +57,7 @@ class DQN_States:
         self.action_size=len(self.action_list)
         self.state_size=self.env.getStateSize()
         self.agent=DQNAgent(self.state_size,self.action_size,train_flag)
-        self.today=str(datetime.date.today())
+        self.today=folder
         self.path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_data/")
         filename =self.path+self.env_name+'/'+self.today+'/data_plots/data_plots.txt'
         signal.signal(signal.SIGINT, sigint_handler)
@@ -68,9 +68,9 @@ class DQN_States:
             self.plotData_file=open(filename, 'r')
         self.env.init()
     def make_env(self,env_name):
-        if(env_name=='citycopter'):
+        if(env_name=='citycopter-v0'):
             return citycopter(512, 512)
-        if(env_name=='catcher'):
+        if(env_name=='Catcher-v0'):
             return Catcher(480,480)
         if(env_name=='colorswitch'):
             return colorswitch(500,700)

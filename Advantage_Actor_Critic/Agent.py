@@ -177,7 +177,7 @@ def trainAdvantageActorCritic():
             save_path = os.path.join(save_path, args.algo)
             save_path =os.path.join(save_path, args.env_name)
             save_path=os.path.join(save_path,args.train_type)
-            save_path=os.path.join(save_path, str(datetime.date.today()))
+            save_path=os.path.join(save_path, args.folder)
          
 
             try:
@@ -264,12 +264,14 @@ def testAdvantageActorCritic():
     save_path = os.path.join(save_path, args.algo)
     save_path =os.path.join(save_path, args.env_name)
     save_path=os.path.join(save_path,args.train_type)
-    
+    save_path=os.path.join(save_path, args.folder)
+
+    """
     if args.view == 'try':
-        save_path=os.path.join(save_path, str(datetime.date.today()))
+        save_path=os.path.join(save_path, args.folder)
     elif args.view == 'present':
         save_path=os.path.join(save_path, 'Final')
-
+    """
     actor_critic, ob_rms = \
                 torch.load( os.path.join(save_path,  args.env_name+'_'+args.train_type+ ".pt"))
 
