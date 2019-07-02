@@ -1,6 +1,6 @@
 import argparse
 
-#import torch
+import torch
 
 import datetime
 def get_args():
@@ -78,7 +78,7 @@ def get_args():
                     help='whether to use a non-deterministic policy')
     args = parser.parse_args()
 
-    #args.cuda = not args.no_cuda and torch.cuda.is_available()
+    args.cuda = not args.no_cuda and torch.cuda.is_available()
 
     """ args of DQN_ScreenShots """
     parser.add_argument('--model',type=str,default='m1',help='Type of model')
