@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/diaa/Desktop/Deep-reinforcement-learning/DQN_Screenshots/trained_models/Breakout-v0/2019-07-02/-150000"
+all_model_checkpoint_paths: "/home/diaa/Desktop/Deep-reinforcement-learning/DQN_Screenshots/trained_models/Breakout-v0/2019-07-02/-150000"

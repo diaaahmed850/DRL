@@ -11,7 +11,10 @@ from os.path import dirname, abspath
 Environment_dir = dirname(dirname(dirname(abspath(__file__))))+'/Environments'
 sys.path.insert(0,dirname(dirname(dirname(abspath(__file__)))))
 sys.path.insert(0,Environment_dir)
-from wrappers.wrapper_screenshots.xteam_wrapper_screenshots import PLEEnv
+from arguments import get_args
+args=get_args()
+if args.train_type=='screenshots':
+      from wrappers.wrapper_screenshots.xteam_wrapper_screenshots import PLEEnv
 
 class Environment(object):
   def __init__(self, config):

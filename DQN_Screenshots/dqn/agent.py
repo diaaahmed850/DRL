@@ -119,7 +119,7 @@ class Agent(BaseModel):
                 'episode.actions': actions,
                 'training.learning_rate': self.learning_rate_op.eval({self.learning_rate_step: self.step}),
               }, self.step)
-          self.plotData_file.close()
+          #self.plotData_file.close()
           num_game = 0
           total_reward = 0.
           self.total_loss = 0.

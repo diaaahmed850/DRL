@@ -246,10 +246,10 @@ class Catcher(PyGameWrapper):
 
         if self.lives == 0:
             self.score += self.rewards["loss"]
-        background_path = os.path.join(_asset_dir, "background.jpg")
-        background_image = pygame.image.load(background_path)#.convert_alpha()
-        background_image = pygame.transform.scale(background_image,(width,height))
-        self.screen.blit(background_image, [0, 0])
+        #background_path = os.path.join(_asset_dir, "background.jpg")
+        #background_image = pygame.image.load(background_path)#.convert_alpha()
+        #background_image = pygame.transform.scale(background_image,(width,height))
+        #self.screen.blit(background_image, [0, 0])
         self.player.draw(self.screen)
         self.fruit.draw(self.screen)
 

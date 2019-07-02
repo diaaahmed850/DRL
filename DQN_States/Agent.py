@@ -4,10 +4,20 @@ starting_episode = 1
 updateTargetNetwork = 1000
 currentIteration = 0
 stop_flow = False
-
+import os,sys
+from os.path import dirname, abspath
+Environment_dir = (dirname(dirname(abspath(__file__))))+'/Environments'
+sys.path.insert(0,Environment_dir)
+sys.path.insert(0,(dirname(dirname(abspath(__file__)))))
+from arguments import get_args
+args=get_args()
+print(Environment_dir)
+from ple_xteam import PLE
+import gym
+if args.train_type=='states':
+    from wrappers.wrapper_states.xteam_wrapper_states import PLEEnv
 
 import random, pygame, signal, time
-import os,sys
 import datetime
 sys.path.append('..')
 #sys.path.append(os.path.abspath(os.path.join('..', 'Environments')))
@@ -51,11 +61,11 @@ class DQN_States:
         #tf.keras.backend.clear_session()
         print(env_name)
         self.env_name=env_name
-        self.game =self.make_env(env_name)
-        self.env= PLE(self.game, fps=fps, force_fps=force_fps, display_screen=display_screen)
-        self.action_list=self.env.getActionSet()
-        self.action_size=len(self.action_list)
-        self.state_size=self.env.getStateSize()
+        self.env =gym.make(self.env_name)
+        #self.env= PLE(self.game, fps=fps, force_fps=force_fps, display_screen=display_screen)
+        #self.action_list=self.env.getActionSet()
+        self.action_size=self.env.action_space.n#len(self.action_list)
+        self.state_size=self.env.observation_space.shape[0]#self.env.getStateSize()
         self.agent=DQNAgent(self.state_size,self.action_size,train_flag)
         self.today=folder
         self.path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_data/")
@@ -66,20 +76,30 @@ class DQN_States:
             self.plotData_file=open(filename, 'w')
         else:
             self.plotData_file=open(filename, 'r')
-        self.env.init()
+        #self.env.init()
     def make_env(self,env_name):
+        """
         if(env_name=='citycopter-v0'):
             return citycopter(512, 512)
         if(env_name=='Catcher-v0'):
             return Catcher(480,480)
         if(env_name=='colorswitch'):
             return colorswitch(500,700)
+        """
+        env=gym.make(env_name)
+        print(env.observation_space.shape[0])
+        print("asfasfasfsafasassfa")
+        return env
 
 
 
     def resetEnv(self):
+        """
         self.env.reset_game()
         return self.getCurrentState()
+        """
+        state=self.env.reset()
+        return np.reshape(state, [1, len(state)])
 
     def getCurrentState(self):
         state_dict = self.env.getGameState()
@@ -87,11 +107,15 @@ class DQN_States:
         return np.reshape(state, [1, len(state)])
 
     def actInEnv(self, action_num):
+        """
         reward = self.env.act(self.action_list[action_num])
         state = self.getCurrentState()
         done = self.env.game_over()
         action = self.action_list[action_num]
-        return state, reward, done, action
+        """
+        state, reward, done,info=self.env.step(action_num)
+        state=np.reshape(state, [1, len(state)])
+        return state, reward, done,info
     def train(self):
         
         done = False
@@ -110,6 +134,7 @@ class DQN_States:
                 total_reward += reward
                 self.agent.remember(state, action, reward, next_state, done)
                 state = next_state
+                self.env.render()
                 if done:
                     print("episode: {}/{}, score: {}, e: {:.3}"
                         .format(e, EPISODES, total_reward, self.agent.epsilon))
@@ -135,7 +160,7 @@ class DQN_States:
         #self.agent.load('saved_data/'+self.env_name+'/'+self.today+"/heli-dqn-9000.h5")
         self.agent.load(self.path+self.env_name+'/'+self.today+"/dqn-states-final.h5")
         done = False
-
+        
         for e in range(starting_episode, EPISODES):
             state = self.resetEnv()
             total_reward = 0.0
@@ -146,6 +171,7 @@ class DQN_States:
                 reward = reward if not done else -10
                 total_reward += reward
                 state = next_state
+                self.env.render()
                 if done:
                     print("episode: {} - score: {}"
                         .format(e, total_reward))

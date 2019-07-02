@@ -1,6 +1,6 @@
 from DQN_States.Agent import DQN_States
 from DQN_Screenshots.Agent_DQN_ScreenShots import train_DQN_Screenshots,test_DQN_Screenshots,plot_DQN_Screenshots
-from Advantage_Actor_Critic.Agent import trainAdvantageActorCritic,testAdvantageActorCritic,plotAdvantageActorCritic
+#from Advantage_Actor_Critic.Agent import trainAdvantageActorCritic,testAdvantageActorCritic,plotAdvantageActorCritic
 from arguments import get_args
 args = get_args()
 """
@@ -9,7 +9,7 @@ x.train()
 """
 if args.algo =='dqn':
     if args.train_type =='states':
-
+        print('states')
         if args.action=='train':
             model=DQN_States(args.env_name,train_flag =True,folder=args.folder)
             model.train()
@@ -23,6 +23,7 @@ if args.algo =='dqn':
         else:
             raise Exception('please provide suitable action')
     elif args.train_type =='screenshots':
+        print('screenshots')
         if args.action=='train':
             train_DQN_Screenshots()
         elif args.action=='test':
