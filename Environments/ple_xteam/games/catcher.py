@@ -3,12 +3,12 @@ import sys
 import random
 import os 
 import contextlib
+import numpy as np
 with contextlib.redirect_stdout(None):
     import pygame
     from pygame.constants import K_a, K_d
     from .base.pygamewrapper import PyGameWrapper
     from .utils import percent_round_int
-
 
 
 _dir_ = os.path.dirname(os.path.abspath(__file__))
@@ -101,10 +101,10 @@ class Fruit(pygame.sprite.Sprite):
                 int(self.SCREEN_HEIGHT / 2),
                 self.size))
 
-        if(score % 15 == 0) and score > 6:
+        if(score % 15 == 0) and score > 16:
             self.speed += (self.SCREEN_HEIGHT*0.0001)
         if(self.speed >= 0.005*self.SCREEN_HEIGHT):
-                self.speed =  0.005*self.SCREEN_HEIGHT
+                self.speed = 0.005*self.SCREEN_HEIGHT
 
         num = random.randrange(1,6,1)
         angle = random.randrange(0,180,30)
@@ -151,12 +151,11 @@ class Catcher(PyGameWrapper):
         PyGameWrapper.__init__(self, width, height, actions=actions)
 
         self.fruit_size = percent_round_int(height, 0.06)
-        self.fruit_fall_speed = 0.001*height#0.00095 * height
+        self.fruit_fall_speed = 0.001*height
         self.state_size=4
         self.player_speed = 0.06 * width
-        self.paddle_width = int(width/6.85)#percent_round_int(width, 0.2)
-        self.paddle_height = int(height/9.6)#percent_round_int(height, 0.04)
-
+        self.paddle_width = int(width/6.85)
+        self.paddle_height = int(height/9.6)
         self.dx = 0.0
         self.init_lives = init_lives
 
@@ -232,10 +231,6 @@ class Catcher(PyGameWrapper):
             self.score += self.rewards["negative"]
             self.lives -= 1    
             self.fruit.reset(0.001*height)
-        
-
-        #hits = pygame.sprite.spritecollide(
-            #self.player, self.terrain_group, False,pygame.sprite.collide_mask)
 
         if pygame.sprite.collide_rect(self.player, self.fruit):
             self.score += self.rewards["positive"]
@@ -246,20 +241,48 @@ class Catcher(PyGameWrapper):
 
         if self.lives == 0:
             self.score += self.rewards["loss"]
-        #background_path = os.path.join(_asset_dir, "background.jpg")
-        #background_image = pygame.image.load(background_path)#.convert_alpha()
-        #background_image = pygame.transform.scale(background_image,(width,height))
-        #self.screen.blit(background_image, [0, 0])
         self.player.draw(self.screen)
         self.fruit.draw(self.screen)
 
         score = int(self.getScore())
         if(score<0):
             score =0
-        font = pygame.font.SysFont("Arial",int(width/15),True)
-        font_surface = font.render(str(score),True,[255,255,255]) #"Score:"+
-        self.screen.blit(font_surface , [int(width/2),int(height/12)])
+        font = pygame.font.SysFont("Arial",int(self.width/15),True)
+        message = str(score)
+        fontcolor = (1, 1, 1)
+        outlinecolor = (255,255,255)
 
+        scorescreen = textOutline(font, message, fontcolor, outlinecolor)
+        self.screen.blit(scorescreen, [int(self.width/2),int(self.height/8)])
+
+
+
+def textHollow(font, message, fontcolor):
+    notcolor = [c^0xFF for c in fontcolor]
+    base = font.render(message, 0, fontcolor, notcolor)
+    size = base.get_width() + 2, base.get_height() + 2
+    img = pygame.Surface(size, 16)
+    img.fill(notcolor)
+    base.set_colorkey(0)
+    img.blit(base, (0, 0))
+    img.blit(base, (2, 0))
+    img.blit(base, (0, 2))
+    img.blit(base, (2, 2))
+    base.set_colorkey(0)
+    base.set_palette_at(1, notcolor)
+    img.blit(base, (1, 1))
+    img.set_colorkey(notcolor)
+    return img
+
+
+def textOutline(font, message, fontcolor, outlinecolor):
+    base = font.render(message, 0, fontcolor)
+    outline = textHollow(font, message, outlinecolor)
+    img = pygame.Surface(outline.get_size(), 24)
+    img.blit(base, (1, 1))
+    img.blit(outline, (0, 0))
+    img.set_colorkey(0)
+    return img
 
 if __name__ == "__main__":
     import numpy as np
