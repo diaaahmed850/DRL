@@ -101,10 +101,10 @@ class Fruit(pygame.sprite.Sprite):
                 int(self.SCREEN_HEIGHT / 2),
                 self.size))
 
-        if(score % 10 == 0) and score > 6:
+        if(score % 15 == 0) and score > 6:
             self.speed += (self.SCREEN_HEIGHT*0.0001)
         if(self.speed >= 0.005*self.SCREEN_HEIGHT):
-                self.speed = 0.005
+                self.speed =  0.005*self.SCREEN_HEIGHT
 
         num = random.randrange(1,6,1)
         angle = random.randrange(0,180,30)
@@ -257,7 +257,7 @@ class Catcher(PyGameWrapper):
         if(score<0):
             score =0
         font = pygame.font.SysFont("Arial",int(width/15),True)
-        font_surface = font.render(str(score),True,[0,0,0]) #"Score:"+
+        font_surface = font.render(str(score),True,[255,255,255]) #"Score:"+
         self.screen.blit(font_surface , [int(width/2),int(height/12)])
 
 

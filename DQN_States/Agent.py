@@ -40,6 +40,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib import style
 from shutil import copyfile
+import imageio
+from skimage.transform import resize
 
 
 def sigint_handler(signum, frame):
@@ -165,9 +167,12 @@ class DQN_States:
             state = self.resetEnv()
             total_reward = 0.0
             done = False
+            frames=[]
+            frames.append(self.env.env._get_image())
             while True:
                 action = self.agent.act(state)
                 next_state, reward, done, _ = self.actInEnv(action)
+                frames.append(self.env.env._get_image())
                 reward = reward if not done else -10
                 total_reward += reward
                 state = next_state
@@ -175,10 +180,26 @@ class DQN_States:
                 if done:
                     print("episode: {} - score: {}"
                         .format(e, total_reward))
+                    self.generate_gif(e,frames,total_reward)
                     break
                 
             if stop_flow:
                 break
+    
+    def generate_gif(self,num, frames_for_gif,score):
+        """
+        Args:
+            frame_number: Integer, determining the number of the current frame
+            frames_for_gif: A sequence of (210, 160, 3) frames of an Atari game in RGB
+            reward: Integer, Total reward of the episode that es ouputted as a gif
+            path: String, path where gif is saved
+        """
+        for idx, frame_idx in enumerate(frames_for_gif): 
+            frames_for_gif[idx] = resize(frame_idx, (480, 480, 3), 
+                                        preserve_range=True, order=0).astype(np.uint8)
+            
+        imageio.mimsave(self.path+self.env_name+'/'+self.today+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(score)+".mp4", 
+                        frames_for_gif)#, duration=1/30)
     
     def plotLoss(self):
         FILENAME = self.path+self.env_name+'/'+self.today+"/data_plots/data_plots.txt"

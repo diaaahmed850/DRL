@@ -36,7 +36,7 @@ class PLEEnv(gym.Env):
         state=self.xteam_get_state()
         terminal = self.game_state.game_over()
         return state, reward, terminal, {}
-
+        
     def _get_image(self):
         image_rotated = np.fliplr(np.rot90(self.game_state.getScreenRGB(),3)) # Hack to fix the rotated image returned by ple
         return image_rotated

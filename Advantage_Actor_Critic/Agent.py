@@ -25,6 +25,9 @@ from a2c_ppo_acktr.utils import get_vec_normalize, update_linear_schedule,get_re
 
 from arguments import get_args
 import shutil
+import imageio
+from skimage.transform import resize
+
 
 
 args = get_args()
@@ -287,6 +290,10 @@ def testAdvantageActorCritic():
         render_func('human')
 
     obs = env.reset()
+    frames=[]
+    total_reward=0.0
+    e=1
+    frames.append(env.env._get_image())
 
     if args.env_name.find('Bullet') > -1:
         import pybullet as p
@@ -303,6 +310,8 @@ def testAdvantageActorCritic():
 
         # Obser reward and next obs
         obs, reward, done, _ = env.step(action)
+        total_reward=total_reward+reward
+        frames.append(env.env._get_image())
 
         masks.fill_(0.0 if done else 1.0)
 
@@ -315,6 +324,24 @@ def testAdvantageActorCritic():
 
         if render_func is not None:
             render_func('human')
+        if done:
+            generate_gif(e,frames,total_reward,path)
+
+def generate_gif(num, frames_for_gif,score):
+    """
+    Args:
+        frame_number: Integer, determining the number of the current frame
+        frames_for_gif: A sequence of (210, 160, 3) frames of an Atari game in RGB
+        reward: Integer, Total reward of the episode that es ouputted as a gif
+        path: String, path where gif is saved
+    """
+    for idx, frame_idx in enumerate(frames_for_gif): 
+        frames_for_gif[idx] = resize(frame_idx, (480, 480, 3), 
+                                    preserve_range=True, order=0).astype(np.uint8)
+        
+    imageio.mimsave(self.path+self.env_name+'/'+self.today+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(score)+".mp4", 
+                    frames_for_gif)#, duration=1/30)
+
 
 
 def plotAdvantageActorCritic():

@@ -109,7 +109,7 @@ def make_env(env_id, seed, rank, log_dir, allow_early_resets):
             plot_path = os.path.join(plot_path, args.algo)
             plot_path =os.path.join(plot_path, args.env_name)
             plot_path=os.path.join(plot_path,args.train_type)
-            plot_path=os.path.join(plot_path, str(datetime.date.today()))
+            plot_path=os.path.join(plot_path, args.folder)
             plot_path=os.path.join(plot_path, args.log_dir)
      
             env = bench.Monitor(env, os.path.join(plot_path, str(rank)),
