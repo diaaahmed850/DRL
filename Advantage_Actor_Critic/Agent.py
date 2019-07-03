@@ -57,7 +57,7 @@ def trainAdvantageActorCritic():
     plot_path = os.path.join(plot_path, args.algo)
     plot_path =os.path.join(plot_path, args.env_name)
     plot_path=os.path.join(plot_path,args.train_type)
-    plot_path=os.path.join(plot_path, str(datetime.date.today()))
+    plot_path=os.path.join(plot_path, args.folder)
     plot_path=os.path.join(plot_path,args.log_dir)
 
     if os.path.exists(plot_path):
@@ -268,7 +268,10 @@ def testAdvantageActorCritic():
     save_path =os.path.join(save_path, args.env_name)
     save_path=os.path.join(save_path,args.train_type)
     save_path=os.path.join(save_path, args.folder)
-
+    try:
+        os.mkdir(save_path+'/gifs')
+    except:
+        pass
     """
     if args.view == 'try':
         save_path=os.path.join(save_path, args.folder)
@@ -293,7 +296,8 @@ def testAdvantageActorCritic():
     frames=[]
     total_reward=0.0
     e=1
-    frames.append(env.env._get_image())
+    print(np.array(env.venv.get_images()[0]).shape)
+    frames.append(np.array(env.venv.get_images()[0]))
 
     if args.env_name.find('Bullet') > -1:
         import pybullet as p
@@ -310,8 +314,8 @@ def testAdvantageActorCritic():
 
         # Obser reward and next obs
         obs, reward, done, _ = env.step(action)
-        total_reward=total_reward+reward
-        frames.append(env.env._get_image())
+        total_reward=total_reward+reward.item()
+        frames.append(np.array(env.venv.get_images()[0]))
 
         masks.fill_(0.0 if done else 1.0)
 
@@ -325,9 +329,12 @@ def testAdvantageActorCritic():
         if render_func is not None:
             render_func('human')
         if done:
-            generate_gif(e,frames,total_reward,path)
+            generate_gif(e,frames,total_reward,save_path)
+            total_reward=0.0
+            frames=[]
+            e=e+1
 
-def generate_gif(num, frames_for_gif,score):
+def generate_gif(num, frames_for_gif,score,path):
     """
     Args:
         frame_number: Integer, determining the number of the current frame
@@ -337,9 +344,8 @@ def generate_gif(num, frames_for_gif,score):
     """
     for idx, frame_idx in enumerate(frames_for_gif): 
         frames_for_gif[idx] = resize(frame_idx, (480, 480, 3), 
-                                    preserve_range=True, order=0).astype(np.uint8)
-        
-    imageio.mimsave(self.path+self.env_name+'/'+self.today+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(score)+".mp4", 
+                                    preserve_range=True, order=0).astype(np.uint8)  
+    imageio.mimsave(path+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(int(score))+".mp4", 
                     frames_for_gif)#, duration=1/30)
 
 
@@ -349,7 +355,7 @@ def plotAdvantageActorCritic():
     plot_path = os.path.join(plot_path, args.algo)
     plot_path =os.path.join(plot_path, args.env_name)
     plot_path=os.path.join(plot_path,args.train_type)
-    plot_path=os.path.join(plot_path, str(datetime.date.today()))
+    plot_path=os.path.join(plot_path, args.folder)
     plot_path=os.path.join(plot_path,args.log_dir)
     results = pu.load_results(plot_path)
     fig = pu.plot_results(results, average_group=True, split_fn=lambda _: '', shaded_std=False)
@@ -359,7 +365,7 @@ def plotAdvantageActorCritic():
     plt.tight_layout()
     plt.ylabel('Rewards', ha='center', va='center', ma='left',rotation=90)
     plt.tight_layout()
-    plt.savefig(plot_path+'results.png')
+    plt.savefig(plot_path+'/'+args.env_name+"-"+args.train_type+'-'+'rewards_plot.png')
     
  
 

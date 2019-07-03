@@ -143,7 +143,7 @@ def main():
             save_path = os.path.join(args.save_dir, args.algo)
             save_path =os.path.join(save_path, args.env_name)
             save_path=os.path.join(save_path,args.train_type)
-            save_path=os.path.join(save_path, str(datetime.date.today()))
+            save_path=os.path.join(save_path, args.folder)
             
 
             try:

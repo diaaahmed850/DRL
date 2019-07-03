@@ -197,7 +197,10 @@ class DQN_States:
         for idx, frame_idx in enumerate(frames_for_gif): 
             frames_for_gif[idx] = resize(frame_idx, (480, 480, 3), 
                                         preserve_range=True, order=0).astype(np.uint8)
-            
+            try:
+                os.mkdir(self.path+self.env_name+'/'+self.today+'/gifs')
+            except:
+                pass
         imageio.mimsave(self.path+self.env_name+'/'+self.today+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(score)+".mp4", 
                         frames_for_gif)#, duration=1/30)
     
@@ -251,7 +254,7 @@ class DQN_States:
                     continue
         ax1.clear()
         ax1.plot(xs, ys)
-        plt.savefig(fig_path+'rewards.png')
+        plt.savefig(fig_path+args.env_name+"-"+args.train_type+'-'+'rewards_plot.png')
 
 
 
