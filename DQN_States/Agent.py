@@ -168,11 +168,13 @@ class DQN_States:
             total_reward = 0.0
             done = False
             frames=[]
-            frames.append(self.env.env._get_image())
+            if args.save_fig:
+                frames.append(self.env.env._get_image())
             while True:
                 action = self.agent.act(state)
                 next_state, reward, done, _ = self.actInEnv(action)
-                frames.append(self.env.env._get_image())
+                if args.save_fig:
+                    frames.append(self.env.env._get_image())
                 reward = reward if not done else -10
                 total_reward += reward
                 state = next_state
@@ -180,7 +182,8 @@ class DQN_States:
                 if done:
                     print("episode: {} - score: {}"
                         .format(e, total_reward))
-                    self.generate_gif(e,frames,total_reward)
+                    if args.save_fig:
+                        self.generate_gif(e,frames,total_reward)
                     break
                 
             if stop_flow:

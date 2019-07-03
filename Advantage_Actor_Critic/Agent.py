@@ -296,8 +296,8 @@ def testAdvantageActorCritic():
     frames=[]
     total_reward=0.0
     e=1
-    print(np.array(env.venv.get_images()[0]).shape)
-    frames.append(np.array(env.venv.get_images()[0]))
+    if args.save_fig:
+        frames.append(np.array(env.venv.get_images()[0]))
 
     if args.env_name.find('Bullet') > -1:
         import pybullet as p
@@ -314,8 +314,9 @@ def testAdvantageActorCritic():
 
         # Obser reward and next obs
         obs, reward, done, _ = env.step(action)
-        total_reward=total_reward+reward.item()
-        frames.append(np.array(env.venv.get_images()[0]))
+        if args.save_fig:
+            total_reward=total_reward+reward.item()
+            frames.append(np.array(env.venv.get_images()[0]))
 
         masks.fill_(0.0 if done else 1.0)
 
@@ -328,7 +329,7 @@ def testAdvantageActorCritic():
 
         if render_func is not None:
             render_func('human')
-        if done:
+        if done and args.save_fig:
             generate_gif(e,frames,total_reward,save_path)
             total_reward=0.0
             frames=[]

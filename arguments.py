@@ -17,7 +17,7 @@ def get_args():
     
     parser.add_argument('--folder', default=str(datetime.date.today()),
                         help='type of view: try | present')
-
+    parser.add_argument('--save-fig',type=bool,default=False,help='Whether to save video during testing')
     parser.add_argument('--lr', type=float, default=7e-4,
                         help='learning rate (default: 7e-4)')
     parser.add_argument('--eps', type=float, default=1e-5,
