@@ -28,7 +28,6 @@ class Block(pygame.sprite.Sprite):
         num = random.randrange(1,4,1)
         rock_path = os.path.join(_asset_dir, "rock"+str(num)+".png")
         image = pygame.image.load(rock_path).convert_alpha()
-        #image = pygame.image.load("rock"+str(num)+".png").convert_alpha()
         image = pygame.transform.scale(image,(int(SCREEN_WIDTH/10.909),int(SCREEN_HEIGHT/13.333)))
         
         # colliding block
@@ -194,7 +193,6 @@ class citycopter(PyGameWrapper):
             "next_gate_dist_to_player": min_dist,
             "next_gate_block_top": min_block.pos.y,
             "next_gate_block_bottom": min_block.pos.y + min_block.height
-            #"distance_block_floor" : (current_terrain.pos.y + self.height * 0.25) - min_block.pos.y
         }
 
         return state
@@ -321,10 +319,7 @@ class citycopter(PyGameWrapper):
 
         if self.lives <= 0.0:
             self.score += self.rewards["loss"]
-        #sky_path = os.path.join(_asset_dir, "sky.png")
-        #background_image = pygame.image.load(sky_path).convert()
-        #background_image = pygame.transform.scale(background_image,(480,480))
-        #self.screen.blit(background_image, [0, 0])
+
         self.player_group.draw(self.screen)
         self.block_group.draw(self.screen)
         self.terrain_group.draw(self.screen)
@@ -333,11 +328,40 @@ class citycopter(PyGameWrapper):
         if(score<0):
             score =0
         font = pygame.font.SysFont("Arial",int(self.width/15),True)
-        font_surface = font.render(str(score),True,[0,0,0]) #"Score:"+
-        self.screen.blit(font_surface , [int(self.width/2),int(self.height/12)])
-        
+        message = str(score)
+        fontcolor = (1, 1, 1)
+        outlinecolor = (255,255,255)
+
+        scorescreen = textOutline(font, message, fontcolor, outlinecolor)
+        self.screen.blit(scorescreen, [int(self.width/2),int(self.height/8)])
 
 
+def textHollow(font, message, fontcolor):
+    notcolor = [c^0xFF for c in fontcolor]
+    base = font.render(message, 0, fontcolor, notcolor)
+    size = base.get_width() + 2, base.get_height() + 2
+    img = pygame.Surface(size, 16)
+    img.fill(notcolor)
+    base.set_colorkey(0)
+    img.blit(base, (0, 0))
+    img.blit(base, (2, 0))
+    img.blit(base, (0, 2))
+    img.blit(base, (2, 2))
+    base.set_colorkey(0)
+    base.set_palette_at(1, notcolor)
+    img.blit(base, (1, 1))
+    img.set_colorkey(notcolor)
+    return img
+
+
+def textOutline(font, message, fontcolor, outlinecolor):
+    base = font.render(message, 0, fontcolor)
+    outline = textHollow(font, message, outlinecolor)
+    img = pygame.Surface(outline.get_size(), 24)
+    img.blit(base, (1, 1))
+    img.blit(outline, (0, 0))
+    img.set_colorkey(0)
+    return img
 
 if __name__ == "__main__":
     import numpy as np
@@ -345,8 +369,8 @@ if __name__ == "__main__":
     pygame.init()   
     game = citycopter(width=480, height=480)   
     game.screen = pygame.display.set_mode(game.getScreenDims(), 0, 32) 
-    copterImage = pygame.image.load("helicopter.png").convert_alpha()
-    pygame.display.set_icon(copterImage)
+    #copterImage = pygame.image.load("helicopter.png").convert_alpha()
+    #pygame.display.set_icon(copterImage)
     pygame.display.set_caption("CityCopter")  
     game.clock = pygame.time.Clock()
     game.rng = np.random.RandomState(24)
@@ -356,7 +380,8 @@ if __name__ == "__main__":
         
         if game.game_over():   
             game.reset()
-            #game.rng = np.random.RandomState(24)
+
+
         dt = game.clock.tick_busy_loop(30) 
         game.step(dt) 
         pygame.display.update()
