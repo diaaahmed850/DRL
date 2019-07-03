@@ -66,7 +66,7 @@ class DQN_States:
         self.env =gym.make(self.env_name)
         #self.env= PLE(self.game, fps=fps, force_fps=force_fps, display_screen=display_screen)
         #self.action_list=self.env.getActionSet()
-        self.action_size=self.env.action_space.n#len(self.action_list)
+        self.action_size=self.env.action_space.n#2
         self.state_size=self.env.observation_space.shape[0]#self.env.getStateSize()
         self.agent=DQNAgent(self.state_size,self.action_size,train_flag)
         self.today=folder
