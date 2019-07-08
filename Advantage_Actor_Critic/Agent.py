@@ -343,11 +343,32 @@ def generate_gif(num, frames_for_gif,score,path):
         reward: Integer, Total reward of the episode that es ouputted as a gif
         path: String, path where gif is saved
     """
+    print(len(frames_for_gif))
+    
     for idx, frame_idx in enumerate(frames_for_gif): 
         frames_for_gif[idx] = resize(frame_idx, (480, 480, 3), 
-                                    preserve_range=True, order=0).astype(np.uint8)  
+                             preserve_range=True, order=0).astype(np.uint8)
     imageio.mimsave(path+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(int(score))+".mp4", 
                     frames_for_gif)#, duration=1/30)
+    """
+    if(len(frames_for_gif)>=8000):
+        print(len(frames_for_gif[0:int(len(frames_for_gif)/2)]))
+        print(len(frames_for_gif[int(len(frames_for_gif)/2):]))
+        f1=frames_for_gif[0:int(len(frames_for_gif)/2)]
+        f2=frames_for_gif[int(len(frames_for_gif)/2):]
+        print("dgdsgsdgdsgdsgdsgsddsgsgsdsgsgsdg")
+        imageio.mimsave(path+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(int(score))+"-part1.mpeg", 
+                    f1)#, duration=1/30)
+        
+        imageio.mimsave(path+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(int(score))+"part2.mpeg", 
+                    f2)#, duration=1/30)
+        
+    else:
+        imageio.mimsave(path+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(int(score))+".mp4", 
+                    frames_for_gif)#, duration=1/30)
+    """
+
+    
 
 
 

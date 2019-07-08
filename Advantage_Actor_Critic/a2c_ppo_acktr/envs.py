@@ -38,8 +38,8 @@ class EpisodicLifeEnv_xteam(gym.Wrapper):
         self.was_real_done = done
         # check current lives, make loss of life terminal,
         # then update lives to handle bonus lives
-        #lives = self.env.unwrapped.ale.lives()
-        lives=self.env.unwrapped.lives()
+        lives = self.env.unwrapped.ale.lives()
+        #lives=self.env.unwrapped.lives()
         if lives < self.lives and lives > 0:
             # for Qbert sometimes we stay in lives == 0 condition for a few frames
             # so it's important to keep lives > 0, so that we only reset once
@@ -92,7 +92,9 @@ def make_env(env_id, seed, rank, log_dir, allow_early_resets):
 
         is_atari = hasattr(gym.envs, 'atari') and isinstance(
             env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
-        if is_atari :#& len(env.observation_space.shape) != 1:
+        if is_atari and len(env.observation_space.shape) == 1:
+            env=wrap_deepmind_xteam(env)
+        if is_atari and len(env.observation_space.shape) != 1:#& len(env.observation_space.shape) != 1:
 
             env = make_atari(env_id)
 
