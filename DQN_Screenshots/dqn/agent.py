@@ -71,8 +71,6 @@ class Agent(BaseModel):
 
       if terminal:
         screen, reward, action, terminal = self.env.new_random_game()
-        print(ep_reward)
-        print(epsiode)
         self.plotData_file.write("{},{}\n".format(epsiode, ep_reward))
         epsiode=epsiode+1
         num_game += 1
