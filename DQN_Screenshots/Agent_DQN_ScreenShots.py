@@ -135,7 +135,7 @@ def plot_DQN_Screenshots():
       for line in lines:
           if len(line) > 1:
               try:
-                  x, y, z = line.split(',')
+                  x, y = line.split(',')
                   ys_sum += float(y)
                   j += 1
                   if j % avg_over == 0:
