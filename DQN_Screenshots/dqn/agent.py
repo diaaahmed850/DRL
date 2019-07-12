@@ -13,6 +13,14 @@ from .ops import linear, conv2d, clipped_error
 from .utils import get_time, save_pkl, load_pkl
 import os,sys
 from os.path import dirname, abspath
+import shutil
+import imageio
+from skimage.transform import resize
+print("hjhjhjhjhjhjhjhjhjhjhj")
+print(dirname(dirname(dirname(abspath(__file__)))))
+from arguments import get_args
+args=get_args()
+sys.path.insert(0,dirname(dirname(dirname(abspath(__file__)))))
 """
 test_dir = dirname(dirname(abspath(__file__)))+'/trained_models'
 print(test_dir)
@@ -378,6 +386,8 @@ class Agent(BaseModel):
       self.writer.add_summary(summary_str, self.step)
 
   def play(self, n_step=10000, n_episode=100, test_ep=None, render=False):
+    frames=[]
+    e=1
     if test_ep == None:
       test_ep = self.ep_end
 
@@ -390,6 +400,7 @@ class Agent(BaseModel):
     best_reward, best_idx = 0, 0
     for idx in range(n_episode):
       screen, reward, action, terminal = self.env.new_random_game()
+      frames.append(self.env.env._get_image())
       current_reward = 0
 
       for _ in range(self.history_length):
@@ -400,11 +411,16 @@ class Agent(BaseModel):
         action = self.predict(test_history.get(), test_ep)
         # 2. act
         screen, reward, terminal = self.env.act(action, is_training=False)
+        frames.append(self.env.env._get_image())
         # 3. observe
         test_history.add(screen)
 
         current_reward += reward
         if terminal:
+          if args.save_fig:
+            self.generate_gif(e,frames,current_reward)
+            frames=[]
+            e=e+1
           break
 
       if current_reward > best_reward:
@@ -418,3 +434,34 @@ class Agent(BaseModel):
     if not self.display:
       self.env.env.monitor.close()
       #gym.upload(gym_dir, writeup='https://github.com/devsisters/DQN-tensorflow', api_key='')
+
+
+  def generate_gif(self,num, frames_for_gif,score):
+    """
+    Args:
+        frame_number: Integer, determining the number of the current frame
+        frames_for_gif: A sequence of (210, 160, 3) frames of an Atari game in RGB
+        reward: Integer, Total reward of the episode that es ouputted as a gif
+        path: String, path where gif is saved
+        try:
+      os.mkdir(self.path+self.env_name+'/'+self.today+'/gifs')
+    except:
+      pass
+    """
+    
+
+    print((dirname(dirname(abspath(__file__)))))
+    print(len(frames_for_gif))
+    path=(dirname(dirname(abspath(__file__))))+'/trained_models/'+args.env_name+'/'+args.folder
+    try:
+      os.mkdir(path+'/gifs')
+    except:
+      pass
+
+    for idx, frame_idx in enumerate(frames_for_gif):
+        
+        frames_for_gif[idx] = resize(frame_idx, (480, 480, 3), 
+                             preserve_range=True, order=0).astype(np.uint8)
+
+    imageio.mimsave(path+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(int(score))+".mp4", 
+                    frames_for_gif)#, duration=1/30)
