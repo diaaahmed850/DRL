@@ -1,6 +1,6 @@
 from DQN_States.Agent import DQN_States
 from DQN_Screenshots.Agent_DQN_ScreenShots import train_DQN_Screenshots,test_DQN_Screenshots,plot_DQN_Screenshots
-#from Advantage_Actor_Critic.Agent import trainAdvantageActorCritic,testAdvantageActorCritic,plotAdvantageActorCritic
+from Advantage_Actor_Critic.Agent import trainAdvantageActorCritic,testAdvantageActorCritic,plotAdvantageActorCritic
 from arguments import get_args
 args = get_args()
 """

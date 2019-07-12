@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-
 from a2c_ppo_acktr.distributions import Categorical, DiagGaussian, Bernoulli
 from a2c_ppo_acktr.utils import init
 

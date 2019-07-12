@@ -296,6 +296,7 @@ def testAdvantageActorCritic():
     frames=[]
     total_reward=0.0
     e=1
+    flag=0
     if args.save_fig:
         frames.append(np.array(env.venv.get_images()[0]))
 
@@ -326,10 +327,15 @@ def testAdvantageActorCritic():
                 yaw = 0
                 humanPos, humanOrn = p.getBasePositionAndOrientation(torsoId)
                 p.resetDebugVisualizerCamera(distance, yaw, -20, humanPos)
-
+        
         if render_func is not None:
             render_func('human')
-        if done and args.save_fig:
+        """
+        if total_reward==1500:
+            generate_gif(e,frames,total_reward,save_path)
+            flag=1
+        """
+        if done and args.save_fig: #and flag==0:
             generate_gif(e,frames,total_reward,save_path)
             total_reward=0.0
             frames=[]
@@ -343,13 +349,23 @@ def generate_gif(num, frames_for_gif,score,path):
         reward: Integer, Total reward of the episode that es ouputted as a gif
         path: String, path where gif is saved
     """
-    print(len(frames_for_gif))
+
+
     
-    for idx, frame_idx in enumerate(frames_for_gif): 
+    print(len(frames_for_gif))
+
+    for idx, frame_idx in enumerate(frames_for_gif):
+        
         frames_for_gif[idx] = resize(frame_idx, (480, 480, 3), 
                              preserve_range=True, order=0).astype(np.uint8)
+
     imageio.mimsave(path+"/gifs/"+"0"+str(num)+"-"+args.env_name+"-"+args.train_type+"-"+str(int(score))+".mp4", 
                     frames_for_gif)#, duration=1/30)
+   
+
+
+
+
     """
     if(len(frames_for_gif)>=8000):
         print(len(frames_for_gif[0:int(len(frames_for_gif)/2)]))
